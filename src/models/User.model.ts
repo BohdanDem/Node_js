@@ -1,5 +1,7 @@
 import { model, Schema } from "mongoose";
 
+import { EGenders } from "../enums/gender.enum";
+
 const userSchema = new Schema(
   {
     name: {
@@ -10,6 +12,10 @@ const userSchema = new Schema(
       min: [1, "Minimum age is 1"],
       max: [199, "Maximum age is 199"],
     },
+    genders: {
+      type: String,
+      enum: EGenders,
+    },
     email: {
       type: String,
       required: true,
@@ -17,10 +23,14 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
     },
+    password: {
+      type: String,
+      required: true,
+    },
   },
   {
-    //timestamps: true,
-    //versionKey: false,
+    timestamps: true,
+    versionKey: false,
   },
 );
 

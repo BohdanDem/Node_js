@@ -29,55 +29,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose = __importStar(require("mongoose"));
 const config_1 = require("./configs/config");
-const User_model_1 = require("./models/User.model");
+const user_router_1 = require("./routers/user.router");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.get("/users", async (req, res) => {
-    const users = await User_model_1.User.find();
-    res.json(users);
-});
-app.post("/users", async (req, res) => {
-    try {
-        const createdUser = await User_model_1.User.create({ ...req.body });
-        res.status(201).json(createdUser);
-    }
-    catch (e) {
-        res.status(400).json(e.message);
-    }
-});
-app.get("/users/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const user = await User_model_1.User.findById(id);
-        if (!user) {
-            throw new Error("User does not exist");
-        }
-        res.json(user);
-    }
-    catch (e) {
-        res.status(404).json(e.message);
-    }
-});
-app.put("/users/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        await User_model_1.User.findByIdAndUpdate(id, req.body);
-        res.status(201).json({ message: "User is updated" });
-    }
-    catch (e) {
-        res.status(404).json(e.message);
-    }
-});
-app.delete("/users/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        await User_model_1.User.findByIdAndDelete(id);
-        res.sendStatus(204);
-    }
-    catch (e) {
-        res.status(404).json(e.message);
-    }
+app.use("/users", user_router_1.userRouter);
+app.use((error, req, res, next) => {
+    const status = error.status || 500;
+    res.status(status).json(error.message);
 });
 const PORT = 5000;
 app.listen(PORT, async () => {

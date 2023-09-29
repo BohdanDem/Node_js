@@ -21,7 +21,7 @@ module.exports = {
     jest: true,
   },
   rules: {
-    'linebreak-style': ['error', 'windows'],
+    "linebreak-style": 0,
     '@typescript-eslint/return-await': ['error', 'always'],
     '@typescript-eslint/no-unused-vars': ['error', {
       argsIgnorePattern: 'req|res|next'

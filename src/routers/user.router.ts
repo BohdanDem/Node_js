@@ -19,22 +19,7 @@ router.get(
   userController.getById,
 );
 
-// Endpoint for creating user
-router.post(
-  "/",
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { error, value } = UserValidator.create.validate(req.body);
-      if (error) {
-        throw new ApiError(error.message, 400);
-      }
-      const createdUser = await User.create(value);
-      res.status(201).json(createdUser);
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+router.post("/", userController.post);
 
 router.delete(
   ":id",

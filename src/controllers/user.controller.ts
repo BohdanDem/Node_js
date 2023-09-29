@@ -27,6 +27,20 @@ class UserController {
       next(e);
     }
   }
+
+  public async post(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const createdUser = await userService.post(req.body);
+
+      res.status(201).json(createdUser);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const userController = new UserController();

@@ -9,6 +9,10 @@ class UserRepository {
   public async findById(id: string): Promise<IUser> {
     return await User.findById(id);
   }
+
+  public async post(dto: IUser): Promise<any> {
+    return await User.create(dto);
+  }
 }
 
 export const userRepository = new UserRepository();

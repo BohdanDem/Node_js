@@ -7,6 +7,12 @@ class UserService {
 
     return users;
   }
+
+  public async post(dto: IUser): Promise<IUser> {
+    const user = await userRepository.post(dto);
+
+    return user;
+  }
 }
 
 export const userService = new UserService();

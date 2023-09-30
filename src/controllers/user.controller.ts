@@ -41,6 +41,21 @@ class UserController {
       next(e);
     }
   }
+
+  public async delete(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      //const { id } = req.params;
+      await userService.delete(req.params.id);
+
+      res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const userController = new UserController();

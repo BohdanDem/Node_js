@@ -21,6 +21,8 @@ router.get(
 
 router.post("/", userController.post);
 
+//router.delete(":id", userController.delete);
+
 router.delete(
   ":id",
   async (req: Request, res: Response, next: NextFunction) => {

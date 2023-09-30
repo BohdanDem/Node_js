@@ -13,6 +13,10 @@ class UserRepository {
   public async post(dto: IUser): Promise<any> {
     return await User.create(dto);
   }
+
+  public async delete(id: string): Promise<void> {
+    await User.deleteOne({ id });
+  }
 }
 
 export const userRepository = new UserRepository();

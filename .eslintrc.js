@@ -21,6 +21,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    "prettier/prettier": ["error",{"endOfLine": "auto"}],
     '@typescript-eslint/return-await': ['error', 'always'],
     '@typescript-eslint/no-unused-vars': ['error', {
       argsIgnorePattern: 'req|res|next'

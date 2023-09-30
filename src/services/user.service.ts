@@ -17,6 +17,10 @@ class UserService {
   public async delete(id: string): Promise<void> {
     await userRepository.delete(id);
   }
+
+  public async put(id: string, dto: Partial<IUser>): Promise<IUser> {
+    return await userRepository.put(id, dto);
+  }
 }
 
 export const userService = new UserService();

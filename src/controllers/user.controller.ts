@@ -48,10 +48,22 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      //const { id } = req.params;
-      await userService.delete(req.params.id);
+      const { id } = req.params;
+      await userService.delete(id);
 
       res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async put(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const user = await userService.put(id, req.body);
+
+      res.status(201).json(user);
     } catch (e) {
       next(e);
     }

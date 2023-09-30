@@ -15,7 +15,13 @@ class UserRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    await User.deleteOne({ id });
+    await User.deleteOne({ _id: id });
+  }
+
+  public async put(id: string, dto: Partial<IUser>): Promise<IUser> {
+    return await User.findByIdAndUpdate(id, dto, {
+      returnDocument: "after",
+    });
   }
 }
 

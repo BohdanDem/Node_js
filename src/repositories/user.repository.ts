@@ -1,3 +1,5 @@
+import { FilterQuery } from "mongoose";
+
 import { User } from "../models/User.model";
 import { IUser } from "../types/user.type";
 
@@ -10,12 +12,17 @@ class UserRepository {
     return await User.findById(id);
   }
 
+  public async getOneByParams(params: FilterQuery<IUser>): Promise<IUser> {
+    return await User.findOne(params);
+  }
+
   public async post(dto: IUser): Promise<any> {
     return await User.create(dto);
   }
 
-  public async delete(id: string): Promise<void> {
-    await User.deleteOne({ _id: id });
+  public async delete(id: string): Promise<any> {
+    const { deletedCount } = await User.deleteOne({ _id: id });
+    return deletedCount;
   }
 
   public async put(id: string, dto: Partial<IUser>): Promise<IUser> {

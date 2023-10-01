@@ -46,7 +46,7 @@ class UserController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> {
+  ): Promise<any> {
     try {
       const { id } = req.params;
       await userService.delete(id);

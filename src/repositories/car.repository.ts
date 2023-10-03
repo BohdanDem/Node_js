@@ -10,7 +10,7 @@ class CarRepository {
     return await Car.findById(id);
   }
 
-  public async post(dto: ICar): Promise<any> {
+  public async post(dto: ICar): Promise<ICar> {
     return await Car.create(dto);
   }
 

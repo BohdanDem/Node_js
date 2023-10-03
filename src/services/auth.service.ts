@@ -9,6 +9,7 @@ import { tokenService } from "./token.service";
 class AuthService {
   public async register(dto: IUserCredentials) {
     try {
+      await this.isEmailUniq(dto.email);
       const hashedPassword = await passwordService.hash(dto.password);
       await userRepository.register({ ...dto, password: hashedPassword });
     } catch (e) {
@@ -40,6 +41,13 @@ class AuthService {
       return tokensPair;
     } catch (e) {
       throw new ApiError(e.message, e.status);
+    }
+  }
+
+  private async isEmailUniq(email: string): Promise<void> {
+    const user = await userRepository.getOneByParams({ email });
+    if (user) {
+      throw new ApiError("The user with this email already exist", 409);
     }
   }
 }

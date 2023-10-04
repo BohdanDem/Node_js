@@ -16,10 +16,6 @@ class UserRepository {
     return await User.findOne(params);
   }
 
-  public async post(dto: IUser): Promise<IUser> {
-    return await User.create(dto);
-  }
-
   public async register(dto: IUserCredentials): Promise<IUser> {
     return await User.create(dto);
   }

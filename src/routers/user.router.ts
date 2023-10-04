@@ -16,12 +16,6 @@ router.get(
   userController.getById,
 );
 
-router.post(
-  "/",
-  commonMiddleware.isBodyValid(UserValidator.create),
-  userController.post,
-);
-
 router.delete("/:id", commonMiddleware.isIdValid("id"), userController.delete);
 
 router.put(

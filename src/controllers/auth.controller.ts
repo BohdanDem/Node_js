@@ -30,6 +30,20 @@ class AuthController {
       next(e);
     }
   }
+
+  public async refresh(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<ITokensPair>> {
+    try {
+      const tokensPair = await authService.refresh();
+
+      return res.status(201).json(tokensPair);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authController = new AuthController();

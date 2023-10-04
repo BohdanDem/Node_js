@@ -28,20 +28,6 @@ class UserController {
     }
   }
 
-  public async post(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const createdUser = await userService.post(req.body);
-
-      res.status(201).json(createdUser);
-    } catch (e) {
-      next(e);
-    }
-  }
-
   public async delete(
     req: Request,
     res: Response,

@@ -9,13 +9,6 @@ class UserService {
     return users;
   }
 
-  public async post(dto: IUser): Promise<IUser> {
-    await this.isEmailUniq(dto.email);
-    const user = await userRepository.post(dto);
-
-    return user;
-  }
-
   public async delete(id: string): Promise<any> {
     const deletedCount = await userRepository.delete(id);
 
@@ -28,13 +21,6 @@ class UserService {
 
   public async put(id: string, dto: Partial<IUser>): Promise<IUser> {
     return await userRepository.put(id, dto);
-  }
-
-  private async isEmailUniq(email: string): Promise<void> {
-    const user = await userRepository.getOneByParams({ email });
-    if (user) {
-      throw new ApiError("The user with this email already exist", 409);
-    }
   }
 }
 

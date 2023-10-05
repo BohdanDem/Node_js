@@ -13,7 +13,7 @@ export class TokenRepository {
   }
 
   public async deleteOne(params: FilterQuery<IToken>): Promise<void> {
-    await Token.create(params);
+    await Token.deleteOne(params);
   }
 }
 

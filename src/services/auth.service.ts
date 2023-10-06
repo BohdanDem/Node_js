@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 import { EEmailAction } from "../enums/email.action.enum";
 import { ApiError } from "../errors/api.error";
 import { tokenRepository } from "../repositories/token.repository";
@@ -41,7 +43,7 @@ class AuthService {
       }
 
       const tokensPair = await tokenService.generateTokenPair({
-        userId: user._id,
+        userId: user._id.toString(),
         name: user.name,
       });
       await tokenRepository.create({ ...tokensPair, _userId: user._id });
@@ -65,12 +67,28 @@ class AuthService {
       await Promise.all([
         await tokenRepository.create({
           ...tokensPair,
-          _userId: payload.userId,
+          _userId: new ObjectId(payload.userId),
         }),
         await tokenRepository.deleteOne({ refreshToken }),
       ]);
 
       return tokensPair;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async logout(accessToken: string): Promise<void> {
+    try {
+      await tokenRepository.deleteOne({ accessToken });
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async logoutAll(userId: string): Promise<void> {
+    try {
+      await tokenRepository.deleteManyByUserId(userId);
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

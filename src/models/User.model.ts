@@ -28,6 +28,9 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    isValid: {
+      type: Boolean,
+    },
   },
   {
     timestamps: true,

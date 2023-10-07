@@ -1,27 +1,51 @@
 import { ObjectId } from "mongodb";
 
-import { EEmailAction } from "../enums/email.action.enum";
+//import { EEmailAction } from "../enums/email.action.enum";
 import { ApiError } from "../errors/api.error";
+import { actionTokenRepository } from "../repositories/actionToken.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
-import { ITokenPayload, ITokensPair } from "../types/token.types";
-import { IUserCredentials } from "../types/user.type";
-import { emailService } from "./email.service";
+import {
+  IActionTokenPayload,
+  ITokenPayload,
+  ITokensPair,
+} from "../types/token.types";
+import { IUser, IUserCredentials } from "../types/user.type";
+//import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
-  public async register(dto: IUserCredentials) {
+  public async register(dto: IUser) {
     try {
       await this.isEmailUniq(dto.email);
       const hashedPassword = await passwordService.hash(dto.password);
-      await userRepository.register({ ...dto, password: hashedPassword });
+      await userRepository.register({
+        ...dto,
+        password: hashedPassword,
+        isValid: false,
+      });
 
-      await emailService.sendMail(
-        "bogdandemchuk.1@gmail.com",
-        EEmailAction.REGISTER,
-        { name: "Bohdan" },
-      );
+      const actionToken = await tokenService.generateActionToken({
+        name: dto.name,
+        email: dto.email,
+        password: dto.password,
+      });
+
+      await actionTokenRepository.create({
+        ...actionToken,
+        name: dto.name,
+        email: dto.email,
+        password: dto.password,
+      });
+
+      // await emailService.sendMail(
+      //   "bogdandemchuk.1@gmail.com",
+      //   EEmailAction.REGISTER,
+      //   { name: "Bohdan" },
+      // );
+
+      return actionToken;
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }
@@ -98,6 +122,16 @@ class AuthService {
     const user = await userRepository.getOneByParams({ email });
     if (user) {
       throw new ApiError("The user with this email already exist", 409);
+    }
+  }
+
+  public async validate(payload: IActionTokenPayload): Promise<void> {
+    try {
+      await actionTokenRepository.getOneByParams(payload);
+
+      //console.log(userActivate);
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
     }
   }
 }

@@ -2,21 +2,35 @@ import * as jwt from "jsonwebtoken";
 
 import { configs } from "../configs/config";
 import { ApiError } from "../errors/api.error";
-import { ITokenPayload, ITokensPair } from "../types/token.types";
+import {
+  IActionTokenPayload,
+  ITokenPayload,
+  ITokensPair,
+} from "../types/token.types";
 
 class TokenService {
   public generateTokenPair(payload: ITokenPayload): ITokensPair {
     const accessToken = jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
-      expiresIn: "1min",
+      expiresIn: "3min",
     });
     const refreshToken = jwt.sign(payload, configs.JWT_REFRESH_SECRET, {
-      expiresIn: "2min",
+      expiresIn: "5min",
     });
 
     return {
       accessToken,
       refreshToken,
     };
+  }
+
+  public generateActionToken(payload: IActionTokenPayload): {
+    actionToken: string;
+  } {
+    const actionToken = jwt.sign(payload, configs.JWT_ACTION_SECRET, {
+      expiresIn: "5min",
+    });
+
+    return { actionToken };
   }
 
   public checkToken(token: string, type: "access" | "refresh"): ITokenPayload {
@@ -33,6 +47,15 @@ class TokenService {
       }
 
       return jwt.verify(token, secret) as ITokenPayload;
+    } catch (e) {
+      throw new ApiError("Token not valid!", 401);
+    }
+  }
+
+  public checkActionToken(token: string): IActionTokenPayload {
+    try {
+      const secret = configs.JWT_ACTION_SECRET;
+      return jwt.verify(token, secret) as IActionTokenPayload;
     } catch (e) {
       throw new ApiError("Token not valid!", 401);
     }

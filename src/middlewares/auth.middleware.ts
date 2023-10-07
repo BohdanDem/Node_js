@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ApiError } from "../errors/api.error";
+import { actionTokenRepository } from "../repositories/actionToken.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { tokenService } from "../services/token.service";
 
@@ -55,6 +56,34 @@ class AuthMiddleware {
 
       req.res.locals.tokenPayload = payload;
       req.res.locals.refreshToken = refreshToken;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async checkActionToken(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const actionToken = req.get("Authorization");
+
+      if (!actionToken) {
+        throw new ApiError("No Token!", 401);
+      }
+
+      const payload = tokenService.checkActionToken(actionToken);
+
+      const entity = await actionTokenRepository.findOne({ actionToken });
+
+      if (!entity) {
+        throw new ApiError("Token not valid!", 401);
+      }
+
+      req.res.locals.tokenPayload = payload;
+      //req.res.locals.actionToken = actionToken;
       next();
     } catch (e) {
       next(e);

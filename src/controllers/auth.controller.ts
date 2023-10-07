@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
 import { authService } from "../services/auth.service";
-import { ITokenPayload, ITokensPair } from "../types/token.types";
+import {
+  IActionTokenPayload,
+  ITokenPayload,
+  ITokensPair,
+} from "../types/token.types";
 
 class AuthController {
   public async register(
@@ -10,9 +14,9 @@ class AuthController {
     next: NextFunction,
   ): Promise<Response<void>> {
     try {
-      await authService.register(req.body);
+      const actionToken = await authService.register(req.body);
 
-      return res.sendStatus(201);
+      return res.status(201).json(actionToken);
     } catch (e) {
       next(e);
     }
@@ -44,6 +48,23 @@ class AuthController {
       const tokensPair = await authService.refresh(tokenPayload, refreshToken);
 
       return res.status(201).json(tokensPair);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async validate(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<void>> {
+    try {
+      const tokenPayload = req.res.locals.tokenPayload as IActionTokenPayload;
+      //const actionToken = req.res.locals.actionToken as string;
+
+      await authService.validate(tokenPayload);
+
+      return res.sendStatus(201);
     } catch (e) {
       next(e);
     }

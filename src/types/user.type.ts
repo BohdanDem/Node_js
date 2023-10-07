@@ -8,6 +8,7 @@ export interface IUser extends Document {
   genders?: EGenders;
   email: string;
   password: string;
+  isValid?: boolean;
 }
 
-export type IUserCredentials = Pick<IUser, "email" | "password">;
+export type IUserCredentials = Pick<IUser, "email" | "password" | "isValid">;

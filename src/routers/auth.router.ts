@@ -28,10 +28,17 @@ router.post(
 );
 
 router.post("/logout", authMiddleware.checkAccessToken, authController.logout);
+
 router.post(
   "/logout-all",
   authMiddleware.checkAccessToken,
   authController.logoutAll,
+);
+
+router.post(
+  "/validate",
+  authMiddleware.checkActionToken,
+  authController.validate,
 );
 
 export const authRouter = router;

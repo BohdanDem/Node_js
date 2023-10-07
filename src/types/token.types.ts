@@ -7,6 +7,12 @@ export interface ITokenPayload {
   name: string;
 }
 
+export interface IActionTokenPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export interface ITokensPair {
   accessToken: string;
   refreshToken: string;
@@ -16,4 +22,11 @@ export interface IToken extends Document {
   accessToken: string;
   refreshToken: string;
   _userId: Types.ObjectId | IUser;
+}
+
+export interface IActionToken {
+  actionToken: string;
+  name: string;
+  email: string;
+  password: string;
 }

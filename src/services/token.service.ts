@@ -2,11 +2,7 @@ import * as jwt from "jsonwebtoken";
 
 import { configs } from "../configs/config";
 import { ApiError } from "../errors/api.error";
-import {
-  IActionTokenPayload,
-  ITokenPayload,
-  ITokensPair,
-} from "../types/token.types";
+import { ITokenPayload, ITokensPair } from "../types/token.types";
 
 class TokenService {
   public generateTokenPair(payload: ITokenPayload): ITokensPair {
@@ -23,7 +19,7 @@ class TokenService {
     };
   }
 
-  public generateActionToken(payload: IActionTokenPayload): {
+  public generateActionToken(payload: ITokenPayload): {
     actionToken: string;
   } {
     const actionToken = jwt.sign(payload, configs.JWT_ACTION_SECRET, {
@@ -52,10 +48,10 @@ class TokenService {
     }
   }
 
-  public checkActionToken(token: string): IActionTokenPayload {
+  public checkActionToken(token: string): ITokenPayload {
     try {
       const secret = configs.JWT_ACTION_SECRET;
-      return jwt.verify(token, secret) as IActionTokenPayload;
+      return jwt.verify(token, secret) as ITokenPayload;
     } catch (e) {
       throw new ApiError("Token not valid!", 401);
     }

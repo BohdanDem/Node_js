@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { authService } from "../services/auth.service";
-import {
-  IActionTokenPayload,
-  ITokenPayload,
-  ITokensPair,
-} from "../types/token.types";
+import { ITokenPayload, ITokensPair } from "../types/token.types";
 
 class AuthController {
   public async register(
@@ -59,8 +55,7 @@ class AuthController {
     next: NextFunction,
   ): Promise<Response<void>> {
     try {
-      const tokenPayload = req.res.locals.tokenPayload as IActionTokenPayload;
-      //const actionToken = req.res.locals.actionToken as string;
+      const tokenPayload = req.res.locals.tokenPayload as ITokenPayload;
 
       await authService.validate(tokenPayload);
 

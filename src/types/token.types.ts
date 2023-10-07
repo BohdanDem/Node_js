@@ -7,11 +7,11 @@ export interface ITokenPayload {
   name: string;
 }
 
-export interface IActionTokenPayload {
-  name: string;
-  email: string;
-  password: string;
-}
+// export interface IActionTokenPayload {
+//   name: string;
+//   email: string;
+//   password: string;
+// }
 
 export interface ITokensPair {
   accessToken: string;
@@ -27,6 +27,5 @@ export interface IToken extends Document {
 export interface IActionToken {
   actionToken: string;
   name: string;
-  email: string;
-  password: string;
+  userId: Types.ObjectId | IUser;
 }

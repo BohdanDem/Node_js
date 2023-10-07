@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 import { IActionToken } from "../types/token.types";
+import { User } from "./User.model";
 
 const actionTokenSchema = new Schema(
   {
@@ -12,13 +13,10 @@ const actionTokenSchema = new Schema(
       type: String,
       required: true,
     },
-    email: {
-      type: String,
+    userId: {
+      type: Types.ObjectId,
       required: true,
-    },
-    password: {
-      type: String,
-      required: true,
+      ref: User,
     },
   },
   {

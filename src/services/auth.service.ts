@@ -5,11 +5,7 @@ import { ApiError } from "../errors/api.error";
 import { actionTokenRepository } from "../repositories/actionToken.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
-import {
-  IActionTokenPayload,
-  ITokenPayload,
-  ITokensPair,
-} from "../types/token.types";
+import { ITokenPayload, ITokensPair } from "../types/token.types";
 import { IUser, IUserCredentials } from "../types/user.type";
 //import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
@@ -20,23 +16,21 @@ class AuthService {
     try {
       await this.isEmailUniq(dto.email);
       const hashedPassword = await passwordService.hash(dto.password);
-      await userRepository.register({
+      const user = await userRepository.register({
         ...dto,
         password: hashedPassword,
         isValid: false,
       });
 
       const actionToken = await tokenService.generateActionToken({
-        name: dto.name,
-        email: dto.email,
-        password: dto.password,
+        userId: user._id.toString(),
+        name: user.name,
       });
 
       await actionTokenRepository.create({
         ...actionToken,
+        userId: user._id,
         name: dto.name,
-        email: dto.email,
-        password: dto.password,
       });
 
       // await emailService.sendMail(
@@ -125,11 +119,9 @@ class AuthService {
     }
   }
 
-  public async validate(payload: IActionTokenPayload): Promise<void> {
+  public async validate(payload: ITokenPayload): Promise<void> {
     try {
-      await actionTokenRepository.getOneByParams(payload);
-
-      //console.log(userActivate);
+      await actionTokenRepository.validate(payload);
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

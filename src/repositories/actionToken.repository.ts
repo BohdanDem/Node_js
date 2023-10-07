@@ -2,8 +2,7 @@ import { FilterQuery } from "mongoose";
 
 import { ActionToken } from "../models/ActionToken.model";
 import { User } from "../models/User.model";
-import { IActionToken } from "../types/token.types";
-import { IUser } from "../types/user.type";
+import { IActionToken, ITokenPayload } from "../types/token.types";
 
 export class ActionTokenRepository {
   public async create(dto: Partial<IActionToken>): Promise<IActionToken> {
@@ -16,8 +15,17 @@ export class ActionTokenRepository {
     return await ActionToken.findOne(params);
   }
 
-  public async getOneByParams(params: FilterQuery<IUser>): Promise<IUser> {
-    return await User.findOne(params);
+  public async validate(dto: ITokenPayload): Promise<void> {
+    return await User.findByIdAndUpdate(
+      dto.userId,
+      {
+        ...dto,
+        isValid: true,
+      },
+      {
+        returnDocument: "after",
+      },
+    );
   }
 }
 

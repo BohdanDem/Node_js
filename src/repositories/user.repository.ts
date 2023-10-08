@@ -30,6 +30,10 @@ class UserRepository {
       returnDocument: "after",
     });
   }
+
+  public async setStatus(userId: string, status: any): Promise<void> {
+    await User.updateOne({ _id: userId }, { $set: { status } });
+  }
 }
 
 export const userRepository = new UserRepository();

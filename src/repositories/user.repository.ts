@@ -31,6 +31,15 @@ class UserRepository {
     });
   }
 
+  public async updateOneById(
+    userId: string,
+    dto: Partial<IUser>,
+  ): Promise<IUser> {
+    return await User.findByIdAndUpdate(userId, dto, {
+      returnDocument: "after",
+    });
+  }
+
   public async setStatus(userId: string, status: any): Promise<void> {
     await User.updateOne({ _id: userId }, { $set: { status } });
   }

@@ -141,6 +141,22 @@ class AuthController {
       next(e);
     }
   }
+
+  public async changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<void>> {
+    try {
+      const tokenPayload = req.res.locals.tokenPayload as ITokenPayload;
+
+      await authService.changePassword(tokenPayload, req.body);
+
+      return res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authController = new AuthController();

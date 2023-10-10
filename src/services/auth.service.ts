@@ -8,7 +8,7 @@ import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
 import { ITokenPayload, ITokensPair } from "../types/token.types";
-import { IUser, IUserCredentials } from "../types/user.type";
+import { IPassword, IUser, IUserCredentials } from "../types/user.type";
 import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
@@ -214,6 +214,31 @@ class AuthService {
         }),
         actionTokenRepository.deleteOne({ token: actionToken }),
       ]);
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async changePassword(
+    payload: ITokenPayload,
+    dto: IPassword,
+  ): Promise<void> {
+    try {
+      const user = await userRepository.findById(payload.userId);
+
+      const isMatched = await passwordService.compare(
+        dto.oldPassword,
+        user.password,
+      );
+      if (!isMatched) {
+        throw new ApiError("Invalid credentials provided", 401);
+      }
+
+      const hashedPassword = await passwordService.hash(dto.newPassword);
+
+      await userRepository.updateOneById(payload.userId, {
+        password: hashedPassword,
+      });
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

@@ -12,8 +12,11 @@ class UserRepository {
     return await User.findById(id);
   }
 
-  public async getOneByParams(params: FilterQuery<IUser>): Promise<IUser> {
-    return await User.findOne(params);
+  public async getOneByParams(
+    params: FilterQuery<IUser>,
+    selection?: string[],
+  ): Promise<IUser> {
+    return await User.findOne(params, selection);
   }
 
   public async register(dto: IUserCredentials): Promise<IUser> {

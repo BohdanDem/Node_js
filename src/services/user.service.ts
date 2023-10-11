@@ -19,8 +19,23 @@ class UserService {
     return deletedCount;
   }
 
-  public async put(id: string, dto: Partial<IUser>): Promise<IUser> {
+  public async put(
+    id: string,
+    dto: Partial<IUser>,
+    userId: string,
+  ): Promise<IUser> {
+    this.checkAbilityToManage(userId, id);
     return await userRepository.put(id, dto);
+  }
+
+  public async getMe(userId: string): Promise<IUser> {
+    return await userRepository.findById(userId);
+  }
+
+  private checkAbilityToManage(userId: string, id: string): void {
+    if (userId !== id) {
+      throw new ApiError("You can not manage this user", 403);
+    }
   }
 }
 

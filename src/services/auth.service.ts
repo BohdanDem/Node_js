@@ -50,7 +50,9 @@ class AuthService {
 
   public async login(dto: IUserCredentials): Promise<ITokensPair> {
     try {
-      const user = await userRepository.getOneByParams({ email: dto.email });
+      const user = await userRepository.getOneByParams({ email: dto.email }, [
+        "password",
+      ]);
       if (!user) {
         throw new ApiError("Invalid credentials provided", 401);
       }
@@ -236,9 +238,12 @@ class AuthService {
 
       const hashedPassword = await passwordService.hash(dto.newPassword);
 
-      await userRepository.updateOneById(payload.userId, {
-        password: hashedPassword,
-      });
+      await Promise.all([
+        userRepository.updateOneById(payload.userId, {
+          password: hashedPassword,
+        }),
+        this.logoutAll(payload.userId),
+      ]);
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

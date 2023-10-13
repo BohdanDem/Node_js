@@ -46,6 +46,37 @@ class UserRepository {
   public async setStatus(userId: string, status: any): Promise<void> {
     await User.updateOne({ _id: userId }, { $set: { status } });
   }
+
+  public async findWithoutActivityAfterDate(date: string): Promise<IUser[]> {
+    return await User.aggregate([
+      {
+        $lookup: {
+          from: "tokens",
+          localField: "_id",
+          foreignField: "_userId",
+          as: "tokens",
+        },
+      },
+      {
+        $match: {
+          tokens: {
+            $not: {
+              $elemMatch: {
+                createdAt: { $gte: date },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
+        },
+      },
+    ]);
+  }
 }
 
 export const userRepository = new UserRepository();

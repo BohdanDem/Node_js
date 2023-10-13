@@ -9,4 +9,8 @@ export const templates = {
     templateName: "forgot-password",
     subject: "Do not worry, we control your password",
   },
+  [EEmailAction.SEND_REMINDER]: {
+    templateName: "send-reminder",
+    subject: "Big discounts",
+  },
 };

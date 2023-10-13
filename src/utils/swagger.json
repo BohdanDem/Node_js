@@ -8,15 +8,62 @@
       "email": "bogdandemchuk.1@gmail.com"
     }
   },
+
   "paths": {
     "/users": {
       "get": {
-        "tags": ["users"],
-        "description": "get all users",
+        "tags": [
+          "user"
+        ],
         "summary": "get all users summary",
+        "description": "get all users",
         "responses": {
           "200": {
             "description": "RETURNED ALL MY USERS",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get info about current user",
+        "description": "user info",
+        "responses": {
+          "200": {
+            "description": "Returns a single user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Find user by ID",
+        "description": "Info of single user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of user to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single user",
             "schema": {
               "$ref": "#/definitions/User"
             }
@@ -28,15 +75,24 @@
   "definitions": {
     "User": {
       "properties": {
-        "email": {
+        "status": {
           "type": "string"
         },
-        "status": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         },
         "age": {
           "type": "integer",
-          "default": 5
+          "format": "int32"
+        },
+        "genders": {
+          "type": "string"
+        },
+        "email": {
+          "type": "integer"
         }
       }
     }

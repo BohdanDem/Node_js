@@ -3,7 +3,6 @@ import { ObjectSchema } from "joi";
 import mongoose from "mongoose";
 
 import { ApiError } from "../errors/api.error";
-import { IQuery } from "../types/pagination.type";
 
 class CommonMiddleware {
   public isIdValid(id: string) {
@@ -39,15 +38,16 @@ class CommonMiddleware {
     };
   }
 
-  public isQueryValid(limit: number, sortedBy: string) {
+  public isQueryValid(validator: ObjectSchema) {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
-        const query = req.query as IQuery;
+        const { error, value } = validator.validate(req.query);
 
-        if (!query.limit) query.limit = limit;
-        if (!query.page) query.page = 1;
-        if (!query.sortedBy) query.sortedBy = sortedBy;
+        if (error) {
+          throw new ApiError(error.message, 400);
+        }
 
+        req.query = value;
         next();
       } catch (e) {
         next(e);

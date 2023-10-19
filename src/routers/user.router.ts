@@ -4,13 +4,14 @@ import { userController } from "../controllers/user.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { commonMiddleware } from "../middlewares/common.middleware";
 import { userMiddleware } from "../middlewares/user.middleware";
+import { QueryValidator } from "../validators/query.validator";
 import { UserValidator } from "../validators/user.validator";
 
 const router = Router();
 
 router.get(
   "/",
-  commonMiddleware.isQueryValid(10, "createdAt"),
+  commonMiddleware.isQueryValid(QueryValidator.query),
   userController.getAll,
 );
 

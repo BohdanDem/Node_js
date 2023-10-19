@@ -14,7 +14,7 @@ import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
-  public async register(dto: IUser): Promise<void> {
+  public async register(dto: IUser): Promise<string> {
     try {
       await this.isEmailUniq(dto.email);
       const hashedPassword = await passwordService.hash(dto.password);
@@ -43,6 +43,7 @@ class AuthService {
           actionToken,
         },
       );
+      return actionToken;
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

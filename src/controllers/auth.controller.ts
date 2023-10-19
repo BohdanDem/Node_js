@@ -11,9 +11,9 @@ class AuthController {
     next: NextFunction,
   ): Promise<Response<void>> {
     try {
-      await authService.register(req.body);
+      const actionToken = await authService.register(req.body);
 
-      return res.sendStatus(201);
+      return res.status(201).json(actionToken);
     } catch (e) {
       next(e);
     }

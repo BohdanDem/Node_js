@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { carController } from "../controllers/car.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import { carMiddleware } from "../middlewares/car.middleware";
 import { commonMiddleware } from "../middlewares/common.middleware";
 import { CarValidator } from "../validators/car.validator";
@@ -18,14 +19,21 @@ router.get(
 
 router.post(
   "/",
+  authMiddleware.checkAccessToken,
   commonMiddleware.isBodyValid(CarValidator.create),
   carController.post,
 );
 
-router.delete("/:id", commonMiddleware.isIdValid("id"), carController.delete);
+router.delete(
+  "/:id",
+  authMiddleware.checkAccessToken,
+  commonMiddleware.isIdValid("id"),
+  carController.delete,
+);
 
 router.put(
   "/:id",
+  authMiddleware.checkAccessToken,
   commonMiddleware.isIdValid("id"),
   commonMiddleware.isBodyValid(CarValidator.update),
   carController.put,

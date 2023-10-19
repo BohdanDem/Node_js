@@ -1,3 +1,5 @@
+import { FilterQuery } from "mongoose";
+
 import { Car } from "../models/Car.model";
 import { ICar } from "../types/car.type";
 
@@ -6,12 +8,16 @@ class CarRepository {
     return await Car.find();
   }
 
+  public async getOneByParams(params: FilterQuery<ICar>): Promise<ICar> {
+    return await Car.findOne(params);
+  }
+
   public async findById(id: string): Promise<ICar> {
     return await Car.findById(id);
   }
 
-  public async post(dto: ICar): Promise<ICar> {
-    return await Car.create(dto);
+  public async post(dto: ICar, userId: string): Promise<ICar> {
+    return await Car.create({ ...dto, _userId: userId });
   }
 
   public async delete(id: string): Promise<any> {
@@ -22,7 +28,7 @@ class CarRepository {
   public async put(id: string, dto: Partial<ICar>): Promise<ICar> {
     return await Car.findByIdAndUpdate(id, dto, {
       returnDocument: "after",
-    });
+    }).populate("_userId");
   }
 }
 

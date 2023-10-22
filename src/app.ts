@@ -3,7 +3,7 @@ import fileUpload from "express-fileupload";
 import * as mongoose from "mongoose";
 import * as swaggerUi from "swagger-ui-express";
 
-import { cronRunner } from "./ crons";
+//import { cronRunner } from "./ crons";
 import { configs } from "./configs/config";
 import { ApiError } from "./errors/api.error";
 import { authRouter } from "./routers/auth.router";
@@ -34,6 +34,6 @@ const PORT = 5000;
 
 app.listen(PORT, async () => {
   await mongoose.connect(configs.DB_URI);
-  cronRunner();
+  //cronRunner();
   console.log(`Server has successfully started on PORT ${PORT}`);
 });

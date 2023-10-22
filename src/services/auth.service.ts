@@ -11,6 +11,7 @@ import { ITokenPayload, ITokensPair } from "../types/token.types";
 import { IPassword, IUser, IUserCredentials } from "../types/user.type";
 import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
+import { prepareSmsService } from "./prepare-sms.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
@@ -43,6 +44,7 @@ class AuthService {
           actionToken,
         },
       );
+      await prepareSmsService.register(dto.phone, { name: dto.name });
       return actionToken;
     } catch (e) {
       throw new ApiError(e.message, e.status);
